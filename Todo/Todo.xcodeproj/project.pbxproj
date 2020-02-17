@@ -13,6 +13,7 @@
 		0ECE0FD623F09C6D00BED7DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE0FD423F09C6D00BED7DB /* Main.storyboard */; };
 		0ECE0FD823F09C7000BED7DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE0FD723F09C7000BED7DB /* Assets.xcassets */; };
 		0ECE0FDB23F09C7000BED7DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE0FD923F09C7000BED7DB /* LaunchScreen.storyboard */; };
+		0ECE0FE323F140E700BED7DB /* NotesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECE0FE223F140E700BED7DB /* NotesController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0ECE0FD723F09C7000BED7DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0ECE0FDA23F09C7000BED7DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0ECE0FDC23F09C7000BED7DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0ECE0FE223F140E700BED7DB /* NotesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +39,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E6C38B423F9383900E9311C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0ECE0FCE23F09C6D00BED7DB /* AppDelegate.swift */,
+				0ECE0FD023F09C6D00BED7DB /* SceneDelegate.swift */,
+				0ECE0FD723F09C7000BED7DB /* Assets.xcassets */,
+				0ECE0FDC23F09C7000BED7DB /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		0ECE0FC223F09C6D00BED7DB = {
 			isa = PBXGroup;
 			children = (
@@ -56,13 +69,11 @@
 		0ECE0FCD23F09C6D00BED7DB /* Todo */ = {
 			isa = PBXGroup;
 			children = (
-				0ECE0FCE23F09C6D00BED7DB /* AppDelegate.swift */,
-				0ECE0FD023F09C6D00BED7DB /* SceneDelegate.swift */,
+				0E6C38B423F9383900E9311C /* Resources */,
 				0ECE0FD223F09C6D00BED7DB /* ViewController.swift */,
+				0ECE0FE223F140E700BED7DB /* NotesController.swift */,
 				0ECE0FD423F09C6D00BED7DB /* Main.storyboard */,
-				0ECE0FD723F09C7000BED7DB /* Assets.xcassets */,
 				0ECE0FD923F09C7000BED7DB /* LaunchScreen.storyboard */,
-				0ECE0FDC23F09C7000BED7DB /* Info.plist */,
 			);
 			path = Todo;
 			sourceTree = "<group>";
@@ -139,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0ECE0FD323F09C6D00BED7DB /* ViewController.swift in Sources */,
+				0ECE0FE323F140E700BED7DB /* NotesController.swift in Sources */,
 				0ECE0FCF23F09C6D00BED7DB /* AppDelegate.swift in Sources */,
 				0ECE0FD123F09C6D00BED7DB /* SceneDelegate.swift in Sources */,
 			);
@@ -286,7 +298,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFR8F4BT7E;
-				INFOPLIST_FILE = Todo/Info.plist;
+				INFOPLIST_FILE = Todo/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,7 +317,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFR8F4BT7E;
-				INFOPLIST_FILE = Todo/Info.plist;
+				INFOPLIST_FILE = Todo/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

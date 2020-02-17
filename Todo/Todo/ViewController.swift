@@ -10,12 +10,14 @@ import UIKit
 
 class ViewController: UIViewController {
     // MARK: - Variables
-    var keyboardSize = CGRect()
-    var keyboardDismissTapGestureRecognizer: UITapGestureRecognizer!
+    private var keyboardSize = CGRect()
+    private var keyboardDismissTapGestureRecognizer: UISwipeGestureRecognizer!
+    private let notesController = NotesController()
+    private let fonts = [UIFont(name: "Hiragino Sans W6", size: 18), UIFont(name: "Khmer Sangam MN", size: 18), UIFont(name: "Arial Rounded MT Bold", size: 18), UIFont(name: "Noteworthy Bold", size: 18), UIFont(name: "American Typewriter", size: 18), UIFont(name: "Copperplate", size: 18)]
 
     // MARK: - IBOutlets
-    @IBOutlet weak var textView: UITextView!
-    @IBOutlet var textViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var textView: UITextView!
+    @IBOutlet private weak var textViewHeight: NSLayoutConstraint!
     
     // MARK: - Lifecycle Functions
     override func viewDidLoad() {
@@ -28,17 +30,75 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    // MARK: - Functions
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        load()
+    }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        save()
+    }
+    
+    // MARK: - Functions
+    public func save() {
+        notesController.saveNotesToPersistantStore(textView.text)
+        guard let font = textView.font else { return }
+        notesController.saveFontToPersistantStore(font.fontName)
+    }
+    
+    public func load() {
+        textView.text = notesController.loadNotesFromPersistantStore()
+        if let fontName = notesController.loadFontFromPersistantStore() {
+            textView.font = UIFont(name: fontName, size: 18)
+        } else {
+            textView.font = fonts.first!
+        }
+    }
 }
 
 // MARK: - Extensions
-extension ViewController: UITextViewDelegate, UIGestureRecognizerDelegate {
+extension ViewController: UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        setupTextViewsAccessoryView()
         return true
     }
     
-    @objc func keyboardWillShow(notification: Notification) {
+    func setupTextViewsAccessoryView() {
+        guard textView.inputAccessoryView == nil else { return }
+        
+        let toolBar: UIToolbar = UIToolbar(frame:CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44))
+            toolBar.isTranslucent = false
+        let flexsibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let fontButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "textformat.size"), landscapeImagePhone: nil, style: .plain, target: nil, action: #selector(fontPressed))
+        toolBar.items = [flexsibleSpace, fontButton]
+        textView.inputAccessoryView = toolBar
+    }
+    
+    @objc
+    func fontPressed() {
+        guard let currentFont = textView.font,
+            let fontIndex = fonts.firstIndex(of: currentFont) else {
+            textView.font = fonts.first!
+            return
+        }
+        
+        if fontIndex + 1 >= fonts.count {
+            textView.font = fonts[0]
+        } else {
+            textView.font = fonts[fontIndex + 1]
+        }
+        
+        save()
+    }
+}
+
+
+extension ViewController: UIGestureRecognizerDelegate {
+    @objc
+    private func keyboardWillShow(notification: Notification) {
         keyboardDismissTapGestureRecognizer.isEnabled = true
         
         if let keyboardRect = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
@@ -50,25 +110,30 @@ extension ViewController: UITextViewDelegate, UIGestureRecognizerDelegate {
         textViewHeight.constant -= keyboardSize.height
     }
     
-    @objc func keyboardWillHide(notification: Notification) {
+    @objc
+    private func keyboardWillHide(notification: Notification) {
         textViewHeight.constant = 0
         
         stopEditingTextInput()
     }
     
-    @objc func stopEditingTextInput() {
+    @objc
+    private func stopEditingTextInput() {
         textView.resignFirstResponder()
+        save()
         
         guard keyboardDismissTapGestureRecognizer.isEnabled else { return }
         keyboardDismissTapGestureRecognizer.isEnabled = false
     }
     
-    @objc func setupKeyboardDismissTapGestureRecognizer() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(stopEditingTextInput))
-        tapGestureRecognizer.numberOfTapsRequired = 1
+    @objc
+    private func setupKeyboardDismissTapGestureRecognizer() {
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(stopEditingTextInput))
+        swipeGestureRecognizer.numberOfTouchesRequired = 1
+        swipeGestureRecognizer.direction = .down
         
-        view.addGestureRecognizer(tapGestureRecognizer)
-        keyboardDismissTapGestureRecognizer = tapGestureRecognizer
+        view.addGestureRecognizer(swipeGestureRecognizer)
+        keyboardDismissTapGestureRecognizer = swipeGestureRecognizer
         
     }
 }
