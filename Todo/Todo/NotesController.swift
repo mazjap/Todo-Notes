@@ -32,6 +32,6 @@ class NotesController {
         if let text = userDefaults.string(forKey: fontKey) {
             return text
         }
-        return nil
+        return "Write your notes here, they'll aways be saved"
     }
 }

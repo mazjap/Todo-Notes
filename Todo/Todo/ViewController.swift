@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     // MARK: - Variables
+    private var wordCountLabel: UIBarButtonItem?
     private var keyboardSize = CGRect()
     private var keyboardDismissTapGestureRecognizer: UISwipeGestureRecognizer!
     private let notesController = NotesController()
@@ -66,14 +67,40 @@ extension ViewController: UITextViewDelegate {
         return true
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        guard let _ = textView.inputAccessoryView, let button = wordCountLabel else {
+            setupTextViewsAccessoryView()
+            return
+        }
+        button.title = getWordCount()
+    }
+    
+    func getWordCount() -> String {
+        let chararacterSet = CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        let components = textView.text.components(separatedBy: chararacterSet)
+        let words = components.filter { !$0.isEmpty }
+        
+        return "\(words.count) words"
+    }
+    
     func setupTextViewsAccessoryView() {
         guard textView.inputAccessoryView == nil else { return }
         
         let toolBar: UIToolbar = UIToolbar(frame:CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 44))
-            toolBar.isTranslucent = false
+            toolBar.isTranslucent = true
+        
         let flexsibleSpace: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        
         let fontButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "textformat.size"), landscapeImagePhone: nil, style: .plain, target: nil, action: #selector(fontPressed))
-        toolBar.items = [flexsibleSpace, fontButton]
+        
+        let undoButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.turn.up.left"), landscapeImagePhone: nil, style: .plain, target: nil, action: #selector(undoPressed))
+        
+        let copyButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "paperclip.circle"), landscapeImagePhone: nil, style: .plain, target: nil, action: #selector(copyPressed))
+        
+        wordCountLabel = UIBarButtonItem(title: getWordCount(), style: .plain, target: nil, action: nil)
+        wordCountLabel!.tintColor = UIColor.gray
+        
+        toolBar.items = [wordCountLabel!, flexsibleSpace, copyButton, undoButton, fontButton]
         textView.inputAccessoryView = toolBar
     }
     
@@ -92,6 +119,16 @@ extension ViewController: UITextViewDelegate {
         }
         
         save()
+    }
+    
+    @objc
+    func undoPressed() {
+        textView.undoManager?.undo()
+    }
+    
+    @objc
+    func copyPressed() {
+        UIPasteboard.general.string = textView.text
     }
 }
 
