@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         guard let vc = (application.windows.first?.rootViewController?.presentedViewController as? ViewController) else { return }
         vc.load()
+        vc.view.endEditing(true)
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
